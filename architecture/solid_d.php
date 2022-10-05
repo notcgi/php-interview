@@ -1,11 +1,23 @@
 <?php
+interface HTTPRequestService {
+    public function request(string $url, string $method, $options = null);
+}
+class XMLHTTPRequestService implements HTTPRequestService {
 
-class XMLHttpService extends XMLHTTPRequestService {}
+    public function request(string $url, string $method, $options = null)
+    {
+        // TODO: Implement request() method.
+    }
+}
+class XMLHttpService extends XMLHTTPRequestService {
+}
 
 class Http {
-    private $service;
+    private HTTPRequestService $service;
 
-    public function __construct(XMLHttpService $xmlHttpService) { }
+    public function __construct(HTTPRequestService $service) {
+        $this->service = $service;
+    }
 
     public function get(string $url, array $options) {
         $this->service->request($url, 'GET', $options);

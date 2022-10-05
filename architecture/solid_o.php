@@ -1,23 +1,30 @@
 <?php
+interface ObjectInterface{
+    public function handle(): string;
+}
+class SomeObject implements ObjectInterface {
+    protected string $name;
 
-class SomeObject {
-    protected $name;
+    public function __construct(string $name) {
+        $this->name = $name;
+    }
 
-    public function __construct(string $name) { }
-
-    public function getObjectName() { }
+    public function handle(): string {
+        return "handle_{$this->name}";
+    }
 }
 
 class SomeObjectsHandler {
     public function __construct() { }
 
+    /**
+     * @param ObjectInterface[] $objects
+     * @return string[]
+     */
     public function handleObjects(array $objects): array {
         $handlers = [];
         foreach ($objects as $object) {
-            if ($object->getObjectName() == 'object_1')
-                $handlers[] = 'handle_object_1';
-            if ($object->getObjectName() == 'object_2')
-                $handlers[] = 'handle_object_2';
+            $handlers[] = $object->handle();
         }
 
         return $handlers;

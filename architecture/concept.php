@@ -19,4 +19,34 @@ class Concept {
 
         $promise->wait();
     }
+
+    private function getSecretKey()
+    {
+        AbstractSecretKeyFactory::getFactory()->getKey();
+    }
+}
+abstract class AbstractSecretKeyFactory {
+
+    public static function getFactory() : AbstractSecretKeyFactory {
+        return match (getenv('SECRET_KEY_SOURCE')) {
+            'file' => new FileSecretKeyFactory(),
+            'redis' => new RedisSecretKeyFactory(),
+        };
+    }
+
+    abstract public function getKey();
+}
+class FileSecretKeyFactory extends AbstractSecretKeyFactory {
+
+    public function getKey()
+    {
+        // TODO: Implement getKey() method.
+    }
+}
+class RedisSecretKeyFactory extends AbstractSecretKeyFactory {
+
+    public function getKey()
+    {
+        // TODO: Implement getKey() method.
+    }
 }

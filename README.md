@@ -37,9 +37,30 @@ $array = [
 ]
 ```
 
+Решение:
+```
+$array = array_column($array,null,'id');
+$array = array_values($array);
+```
+
 2. отсортировать многомерный массив по ключу (любому)
 
+Решение:
+Аналогично предыдущему
+```
+$array = array_column($array,null,'name');
+asort($array);
+$array = array_values($array);
+```
+или
+```
+usort($array, fn($a, $b) => $a['name'] <=> $b['name']);
+```
 3. вернуть из массива только элементы, удовлетворяющие внешним условиям (например элементы с определенным `id`)
+Решение:
+```
+$array = array_filter($array, fn($elem) => $elem['id'] === 1);
+```
 
 4. изменить в массиве значения и ключи (использовать `name => id` в качестве пары `ключ => значение`)
 
@@ -52,6 +73,10 @@ $array = [
   "test3" => 3
 ]
 ```
+Решение:
+```
+$array = array_column($array,'id','name');
+```
 
 5. В базе данных имеется таблица с товарами `goods` (id INTEGER, name TEXT), 
 таблица с тегами `tags` (id INTEGER, name TEXT) и таблица связи товаров и тегов 
@@ -60,6 +85,14 @@ $array = [
 
 На выходе: SQL-запрос.
 
+Решение:
+```
+select *
+from goods where id in (select goods_id
+                        from goods_tags
+                        group by goods_id
+                        having count(tag_id) = (select count() from tags))
+```
 6. Выбрать без join-ов и подзапросов все департаменты,
 в которых есть мужчины, и все они (каждый) поставили высокую оценку (строго выше 5).
 ```
@@ -72,6 +105,14 @@ create table evaluations
 );
 ```
 На выходе: SQL-запрос.
+Решение:
+```
+select department_id
+from evaluations
+where gender = true
+group by department_id
+having count() = count(case when value>=5 then 1 end);
+```
 
 # Практические и архитектурные задачи
 Решение должно быть "концептуально" правильным. Мы не будем досконально тестировать корректную работу системы на всех краевых случаях :)
